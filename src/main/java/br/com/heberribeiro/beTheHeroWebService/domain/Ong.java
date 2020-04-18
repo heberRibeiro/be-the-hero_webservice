@@ -1,6 +1,8 @@
 package br.com.heberribeiro.beTheHeroWebService.domain;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Ong implements Serializable {
 	private static final long serialVersionUID = 1L;
@@ -11,6 +13,7 @@ public class Ong implements Serializable {
 	private String whatsapp;
 	private String city;
 	private String uf;
+	private List<Incident> incidents = new ArrayList<>();
 	
 	public Ong() {
 		
@@ -71,6 +74,10 @@ public class Ong implements Serializable {
 
 	public void setUf(String uf) {
 		this.uf = uf;
+	}
+
+	public List<Incident> getIncidents() {
+		return incidents;
 	}
 
 	@Override
