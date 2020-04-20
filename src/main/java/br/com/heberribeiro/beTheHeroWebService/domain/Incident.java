@@ -9,6 +9,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 public class Incident implements Serializable {
 	private static final long serialVersionUID = 1L;
@@ -68,6 +70,7 @@ public class Incident implements Serializable {
 		this.value = value;
 	}
 
+	@JsonIgnore	// solves the cyclical reference problem in serialization
 	public Ong getOng() {
 		return ong;
 	}
