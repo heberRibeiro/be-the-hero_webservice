@@ -16,36 +16,27 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import br.com.heberribeiro.beTheHeroWebService.domain.Incident;
-import br.com.heberribeiro.beTheHeroWebService.domain.Ong;
-import br.com.heberribeiro.beTheHeroWebService.repositories.IncidentRepository;
-import br.com.heberribeiro.beTheHeroWebService.repositories.OngRepository;
+import br.com.heberribeiro.beTheHeroWebService.services.IncidentService;
 
 @RestController
 @RequestMapping
 public class IncidentResource {
 	
 	@Autowired
-	private IncidentRepository incidentRepository;
-	
-	@Autowired
-	private OngRepository ongRepository;
+	private IncidentService incidentService;
 	
 	@GetMapping(value = "/incidents")
 	public ResponseEntity<List<Incident>> findAll() {
 		
-		List<Incident> incidents = incidentRepository.findAll();
+		List<Incident> incidents = incidentService.findAll();
 		
 		return ResponseEntity.ok().body(incidents);		
 	}
 	
 	@PostMapping(value = "/incidents")
 	public ResponseEntity<Void> insert(@RequestBody Incident incident, @RequestHeader Integer ong_id) {
-		incident.setId(null);
-		Ong ong = ongRepository.getOne(ong_id);
-		incident.setOng(ong);
-		ong.getIncidents().add(incident);
 		
-		Incident obj = incidentRepository.save(incident);
+		Incident obj = incidentService.insert(incident, ong_id);		
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequest()
 				.path("/{id}").buildAndExpand(obj.getId()).toUri();
 		
@@ -54,7 +45,8 @@ public class IncidentResource {
 	
 	@DeleteMapping(value = "/incidents/{id}")
 	public ResponseEntity<Void> delete(@PathVariable Integer id) {
-		incidentRepository.deleteById(id);
+		
+		incidentService.delete(id);
 		
 		return ResponseEntity.noContent().build();		
 	}
