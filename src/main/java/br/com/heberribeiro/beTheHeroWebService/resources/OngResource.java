@@ -13,27 +13,26 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import br.com.heberribeiro.beTheHeroWebService.domain.Ong;
-import br.com.heberribeiro.beTheHeroWebService.repositories.OngRepository;
+import br.com.heberribeiro.beTheHeroWebService.services.OngService;
 
 @RestController
 @RequestMapping
 public class OngResource {
 	
 	@Autowired
-	private OngRepository ongRepository;
+	private OngService ongService;
 	
 	@GetMapping(value = "/ongs")
 	public ResponseEntity<List<Ong>> findAll() {
 		
-		List<Ong> ongs = ongRepository.findAll();
+		List<Ong> ongs = ongService.findAll();
 		
 		return ResponseEntity.ok().body(ongs);		
 	}
 	
 	@PostMapping(value = "/ongs")
 	public ResponseEntity<Void> insert(@RequestBody Ong ong) {
-		ong.setId(null);
-		Ong obj = ongRepository.save(ong);
+		Ong obj = ongService.insert(ong);
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequest()
 				.path("/{id}").buildAndExpand(obj.getId()).toUri();
 		
