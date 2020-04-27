@@ -6,6 +6,9 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
+import org.springframework.data.domain.Sort.Order;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -28,9 +31,12 @@ public class OngResource {
 	@GetMapping(value = "/ongs")
 	public ResponseEntity<List<Ong>> findAll(
 			@RequestParam(value = "page", defaultValue = "0") int page,
-			@RequestParam(value = "limit", defaultValue = "5") int limit) {
+			@RequestParam(value = "limit", defaultValue = "5") int limit, 
+			@RequestParam(value = "direction", defaultValue = "asc") String direction) {
 		
-		Pageable pageable = PageRequest.of(page, limit);
+		Direction sortDirection = "desc".equalsIgnoreCase(direction) ? Direction.ASC : Direction.DESC;
+		
+		Pageable pageable = PageRequest.of(page, limit, Sort.by(sortDirection, "name"));
 		
 		List<Ong> ongs = ongService.findAll(pageable);
 		
