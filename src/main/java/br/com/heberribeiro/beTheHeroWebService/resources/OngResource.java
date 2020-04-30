@@ -8,11 +8,11 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
-import org.springframework.data.domain.Sort.Order;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -36,7 +36,7 @@ public class OngResource {
 		
 		Direction sortDirection = "desc".equalsIgnoreCase(direction) ? Direction.ASC : Direction.DESC;
 		
-		Pageable pageable = PageRequest.of(page, limit, Sort.by(sortDirection, "name"));
+		Pageable pageable = PageRequest.of(page, limit, Sort.by(sortDirection, "id"));
 		
 		List<Ong> ongs = ongService.findAll(pageable);
 		
@@ -44,8 +44,8 @@ public class OngResource {
 	}
 	
 	@PostMapping(value = "/ongs")
-	public ResponseEntity<Void> insert(@RequestBody Ong ong) {
-		Ong obj = ongService.insert(ong);
+	public ResponseEntity<Void> insert(@RequestBody Ong ong, @RequestHeader Integer user_ong_id) {
+		Ong obj = ongService.insert(ong, user_ong_id);
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequest()
 				.path("/{id}").buildAndExpand(obj.getId()).toUri();
 

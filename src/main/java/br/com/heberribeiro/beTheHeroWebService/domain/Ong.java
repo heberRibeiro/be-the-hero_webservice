@@ -8,12 +8,16 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 public class Ong implements Serializable {
 	private static final long serialVersionUID = 1L;
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
@@ -22,12 +26,16 @@ public class Ong implements Serializable {
 	private String whatsapp;
 	private String city;
 	private String uf;
-	
+
 	@OneToMany(mappedBy = "ong")
 	private List<Incident> incidents = new ArrayList<>();
-	
+
+	@ManyToOne
+	@JoinColumn(name = "user_ong_id")
+	private UserOng userOng;
+
 	public Ong() {
-		
+
 	}
 
 	public Ong(Integer id, String name, String email, String whatsapp, String city, String uf) {
@@ -89,6 +97,19 @@ public class Ong implements Serializable {
 
 	public List<Incident> getIncidents() {
 		return incidents;
+	}
+
+	public void setIncidents(List<Incident> incidents) {
+		this.incidents = incidents;
+	}
+
+	@JsonIgnore // solves the cyclical reference problem in serialization
+	public UserOng getUserOng() {
+		return userOng;
+	}
+
+	public void setUserOng(UserOng userOng) {
+		this.userOng = userOng;
 	}
 
 	@Override
